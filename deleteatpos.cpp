@@ -1,11 +1,10 @@
 
-//delete a node at an arbitary position 
-
+//delete a node at certain position 
 
 #include <iostream>
 using namespace std;
 
-//  Node structure
+// Node structure
 class Node {
 public:
     int data;
@@ -17,87 +16,84 @@ public:
     }
 };
 
-//  Insert at tail (sirf list banane ke liye)
+// Insert at tail (list banane ke liye)
 void insertAtTail(Node*& head, int value) {
     Node* newNode = new Node(value);
 
-    if (head == NULL) {               // Agar list empty hai
+    if (head == NULL) {
         head = newNode;
         return;
     }
 
-    Node* temp = head;                // temp ko head par rakha
-    while (temp->next != NULL) {      // Jab tak last node na mil jaye
-        temp = temp->next;            // temp ko next par move karte jao
+    Node* temp = head;
+    while (temp->next != NULL) {      // last node tak jao
+        temp = temp->next;
     }
-
-    temp->next = newNode;             // Last node ka next = new node
+    temp->next = newNode;
 }
 
-//  Delete node at ANY arbitrary position
+// ✅ Delete node at ANY arbitrary position (using WHILE LOOP)
 void deleteAtPosition(Node*& head, int position) {
 
-    //  Case 1: List empty
+    // Case 1: Empty list
     if (head == NULL) {
         cout << "List is empty\n";
         return;
     }
 
-    //  Case 2: Delete at head (position = 1)
+    // Case 2: Delete head (position = 1)
     if (position == 1) {
-        Node* temp = head;            // Purana head store kiya
-        head = head->next;            // Head ko next node par shift kiya
-        delete temp;                  // Purana head free
+        Node* temp = head;            // old head store
+        head = head->next;            // head ko next par shift
+        delete temp;                  // old head free
         return;
     }
 
-    //  Case 3: Delete at any other position
     Node* temp = head;
+    int count = 1;
 
     /*
-         LOOP EXPLANATION (MOST IMPORTANT)
+        ✅ WHILE LOOP EXPLANATION
+
         Hume delete wale node ke *pehle* rukna hota hai.
-        Isliye hum (position - 1)th node tak traverse karte hain.
+        Isliye hum (position - 1)th node tak jaate hain.
 
-        Example:
-        Position = 3 delete karna hai
-        Hume 2nd node par rukna hoga.
+        Example: delete position = 3
+        Hume 2nd node par rukna hai.
 
-        Loop:
-        i = 1 → temp = head
-        i < position - 1 → i < 2 → true
-        temp = temp->next → move to 2nd node
+        count = 1 → temp = head (1st node)
+        count < position - 1 → 1 < 2 → true → temp = temp->next (2nd node)
+        count = 2 → loop stops
     */
 
-    for (int i = 1; temp != NULL && i < position - 1; i++) {
-        temp = temp->next;            // temp ko aage move karte jao
+    while (temp != NULL && count < position - 1) {
+        temp = temp->next;            // pointer aage move hota hai
+        count++;
     }
 
-    //  Agar position list se bahar ho
+    // Agar position list se bahar ho
     if (temp == NULL || temp->next == NULL) {
         cout << "Invalid position\n";
         return;
     }
 
     /*
-         DELETE LOGIC
+        ✅ DELETE LOGIC
 
         temp → node before the one to delete
         temp->next → node to delete
         temp->next->next → node after delete
 
-        So we do:
+        So:
         temp->next = temp->next->next;
-
-        Yeh beech wale node ko list se unlink kar deta hai.
     */
 
-    Node* nodeToDelete = temp->next;      // Delete hone wala node
-    temp->next = temp->next->next;        // Link skip kiya (unlink)
-    delete nodeToDelete;                  // Memory free
+    Node* nodeToDelete = temp->next;      // delete hone wala node
+    temp->next = temp->next->next;        // beech wala node skip
+    delete nodeToDelete;                  // memory free
 }
 
-//  Display list
+// Display list
 void display(Node* head) {
     Node* temp = head;
     while (temp != NULL) {
@@ -110,7 +106,7 @@ void display(Node* head) {
 int main() {
     Node* head = NULL;
 
-    //  Creating sample list: 10 -> 20 -> 30 -> 40 -> NULL
+    // Creating sample list: 10 -> 20 -> 30 -> 40 -> NULL
     insertAtTail(head, 10);
     insertAtTail(head, 20);
     insertAtTail(head, 30);
@@ -119,11 +115,32 @@ int main() {
     cout << "Original List: ";
     display(head);
 
-    // Delete node at position 3 (i.e., delete 30)
-    deleteAtPosition(head, 3);
+    deleteAtPosition(head, 3);   // delete 30
 
     cout << "After deleting position 3: ";
     display(head);
 
     return 0;
 }
+
+
+
+
+
+//extraaaaaaaaaaaaaaaaaaaaaaaaaa---------------->
+
+// void deleteatposition(Node* &head){
+//     if(pos==0){
+//         deleteathead(head);
+//         return ;
+//     }
+//     int curr_pos=0;
+//     Node* prev = head;
+//     while(curr_pos!=pos-1){
+//         prev= prev->next;
+//         cur_poss++;
+//     }
+//     Node*temp = prev->next;
+//     prev->next =prev->next->next;
+//     delete(temp);
+// }
